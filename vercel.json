@@ -11,7 +11,11 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/index.html"
+      "destination": "/entry-ml-v2.html"
+    },
+    {
+      "source": "/entry-ml-v2",
+      "destination": "/entry-ml-v2.html"
     }
   ]
 }

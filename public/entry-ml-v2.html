@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Entry ML v2.2 Replay</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="/static/css/entry_ml_v2.css" />
+  </head>
+  <body>
+    <main class="eml2-shell">
+      <header class="eml2-header">
+        <div>
+          <h1>Entry ML v2.2 Replay</h1>
+          <p>strict major universe · 5m/15m/1h synchronized charts · model evidence · failure twins</p>
+        </div>
+        <div id="eml2Status" class="eml2-status">Loading</div>
+      </header>
+
+      <section class="eml2-controls">
+        <label>
+          <span>Month</span>
+          <select id="eml2Month"></select>
+        </label>
+        <label>
+          <span>Type</span>
+          <select id="eml2Type"></select>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2ShowModel" type="checkbox" checked />
+          <span>모델 표시</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2ShowLabel" type="checkbox" />
+          <span>라벨 표시</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2ShowWindows" type="checkbox" checked />
+          <span>윈도우</span>
+        </label>
+        <label class="eml2-toggle eml2-danger-toggle">
+          <input id="eml2ShowOutcome" type="checkbox" />
+          <span>결과 보기</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2ShowLive" type="checkbox" checked />
+          <span>실시간 알람</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2Tier0" type="checkbox" checked />
+          <span>Tier0</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2Tier1" type="checkbox" checked />
+          <span>Tier1</span>
+        </label>
+        <label class="eml2-toggle">
+          <input id="eml2Tier2" type="checkbox" checked />
+          <span>Tier2</span>
+        </label>
+        <div id="eml2LiveStatus" class="eml2-live-status">Live 대기</div>
+      </section>
+
+      <section class="eml2-workbench">
+        <aside class="eml2-sidebar">
+          <div class="eml2-panel-title">
+            <h2>Universe</h2>
+            <span id="eml2SymbolCount">0</span>
+          </div>
+          <div id="eml2SymbolList" class="eml2-symbol-list"></div>
+        </aside>
+
+        <section class="eml2-main">
+          <div class="eml2-toolbar">
+            <div>
+              <h2 id="eml2Title">-</h2>
+              <p id="eml2Meta">-</p>
+            </div>
+            <div id="eml2Legend" class="eml2-legend"></div>
+          </div>
+          <div id="eml2Charts" class="eml2-charts"></div>
+        </section>
+
+        <aside class="eml2-detail">
+          <div class="eml2-panel-title">
+            <h2>Evidence</h2>
+            <span id="eml2QueryCount">0</span>
+          </div>
+          <label class="eml2-query-select">
+            <span>Query</span>
+            <select id="eml2Query"></select>
+          </label>
+          <div id="eml2Evidence" class="eml2-evidence"></div>
+        </aside>
+      </section>
+    </main>
+    <script src="/static/vendor/lightweight-charts.standalone.production.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/static/js/entry_ml_v2.js?v=20260705_tier_route_copy"></script>
+  </body>
+</html>

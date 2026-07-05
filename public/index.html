@@ -2,67 +2,10 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Candle Tier Live Dashboard</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <meta http-equiv="refresh" content="0; url=/entry-ml-v2" />
+    <title>Entry ML v2.2 Replay</title>
   </head>
   <body>
-    <main class="shell">
-      <header class="header">
-        <div>
-          <h1>Candle Tier Live</h1>
-          <p>Entry ML v2.2 candle frequency Tier0/Tier1/Tier2 realtime markers · live 5m/15m/1h charts</p>
-        </div>
-        <div id="status" class="status">Loading</div>
-      </header>
-
-      <section class="controls">
-        <label class="toggle tier0"><input id="tier0" type="checkbox" checked /> Tier0</label>
-        <label class="toggle tier1"><input id="tier1" type="checkbox" checked /> Tier1</label>
-        <label class="toggle tier2"><input id="tier2" type="checkbox" checked /> Tier2</label>
-        <label class="toggle"><input id="showMarkers" type="checkbox" checked /> 마커</label>
-        <label class="toggle"><input id="autoFollow" type="checkbox" checked /> 최신 심볼 추적</label>
-        <button id="refresh" type="button">Refresh</button>
-        <div id="liveStatus" class="live-status">Supabase 대기</div>
-      </section>
-
-      <section class="workbench">
-        <aside class="sidebar">
-          <div class="panel-title">
-            <h2>Symbols</h2>
-            <span id="symbolCount">0</span>
-          </div>
-          <div id="symbolList" class="symbol-list"></div>
-        </aside>
-
-        <section class="main">
-          <div class="toolbar">
-            <div>
-              <h2 id="title">-</h2>
-              <p id="meta">-</p>
-            </div>
-            <div class="legend">
-              <span><i class="sw tier0"></i>Tier0</span>
-              <span><i class="sw tier1"></i>Tier1</span>
-              <span><i class="sw tier2"></i>Tier2</span>
-              <span><i class="sw price"></i>entry</span>
-            </div>
-          </div>
-          <div id="charts" class="charts"></div>
-        </section>
-
-        <aside class="detail">
-          <div class="panel-title">
-            <h2>Live Markers</h2>
-            <span id="markerCount">0</span>
-          </div>
-          <div id="markerList" class="marker-list"></div>
-        </aside>
-      </section>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
-    <script src="/static/js/app.js?v=20260705_tier_live"></script>
+    <a href="/entry-ml-v2">Entry ML v2.2 Replay</a>
   </body>
 </html>
