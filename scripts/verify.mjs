@@ -15,7 +15,7 @@ for (const file of required) {
 
 const html = await readFile("public/entry-ml-v2.html", "utf8");
 const js = await readFile("public/static/js/entry_ml_v2.js", "utf8");
-if (!html.includes("Entry ML v2.2 Replay")) throw new Error("copied dashboard title missing");
+if (!html.includes("Entry ML Candle Frequency Tier Live")) throw new Error("tier live title missing");
 if (!js.includes("tv-local-macro-onchain-vercel.vercel.app")) throw new Error("remote source routing missing");
 for (const tier of ["tier0", "tier1", "tier2"]) {
   if (!js.includes(tier)) throw new Error(`missing ${tier} routing`);

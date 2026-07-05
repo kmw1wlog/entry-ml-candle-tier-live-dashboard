@@ -16,9 +16,14 @@ module.exports = async function handler(req, res) {
     res.json({ symbol, interval, source, bars });
   };
   const params = new URLSearchParams({ symbol, interval, limit: String(limit) });
-  const response = await fetch(`https://api.binance.com/api/v3/klines?${params}`, {
-    headers: { "user-agent": "entry-ml-v2-live-dashboard" },
-  });
+  let response;
+  try {
+    response = await fetch(`https://api.binance.com/api/v3/klines?${params}`, {
+      headers: { "user-agent": "entry-ml-v2-live-dashboard" },
+    });
+  } catch (error) {
+    response = { ok: false, status: `throw:${error.name || "fetch"}` };
+  }
   if (response.ok) {
     const rows = await response.json();
     sendBars("binance", rows.map((row) => ({
@@ -33,17 +38,27 @@ module.exports = async function handler(req, res) {
   } else {
     const bybitInterval = { "1m": "1", "5m": "5", "15m": "15", "1h": "60" }[interval];
     const bybitParams = new URLSearchParams({ category: "spot", symbol, interval: bybitInterval, limit: String(limit) });
-    const bybit = await fetch(`https://api.bybit.com/v5/market/kline?${bybitParams}`, {
-      headers: { "user-agent": "entry-ml-v2-live-dashboard" },
-    });
+    let bybit;
+    try {
+      bybit = await fetch(`https://api.bybit.com/v5/market/kline?${bybitParams}`, {
+        headers: { "user-agent": "entry-ml-v2-live-dashboard" },
+      });
+    } catch (error) {
+      bybit = { ok: false, status: `throw:${error.name || "fetch"}` };
+    }
     if (!bybit.ok) {
       const base = symbol.replace(/USDT$/, "");
       const granularity = { "1m": "ONE_MINUTE", "5m": "FIVE_MINUTE", "15m": "FIFTEEN_MINUTE", "1h": "ONE_HOUR" }[interval];
       for (const product of [`${base}-USDT`, `${base}-USD`]) {
         const coinbaseParams = new URLSearchParams({ granularity, limit: String(Math.min(limit, 300)) });
-        const coinbase = await fetch(`https://api.coinbase.com/api/v3/brokerage/market/products/${product}/candles?${coinbaseParams}`, {
-          headers: { "user-agent": "entry-ml-v2-live-dashboard" },
-        });
+        let coinbase;
+        try {
+          coinbase = await fetch(`https://api.coinbase.com/api/v3/brokerage/market/products/${product}/candles?${coinbaseParams}`, {
+            headers: { "user-agent": "entry-ml-v2-live-dashboard" },
+          });
+        } catch {
+          continue;
+        }
         if (!coinbase.ok) continue;
         const payload = await coinbase.json();
         const candles = payload?.candles || [];

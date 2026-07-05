@@ -116,9 +116,8 @@
   }
 
   function markerTier(marker) {
-    const rawTier = marker?.raw_record?.alert?.tier;
-    if (["tier0", "tier1", "tier2"].includes(rawTier)) return rawTier;
     const source = String(marker?.source_model || "");
+    if (!source.startsWith("candle_frequency_tier")) return null;
     if (source.includes("tier0")) return "tier0";
     if (source.includes("tier1")) return "tier1";
     if (source.includes("tier2")) return "tier2";
@@ -727,7 +726,7 @@
     `).join("");
     els.evidence.innerHTML = `
       <div class="eml2-card">
-        <h3>Selected Query</h3>
+        <h3>Selected Query (기존 v2.2 모델)</h3>
         <div class="eml2-kv">
           <span>cluster</span><strong>${cluster.cluster_id}</strong>
           <span>live / score-max</span><strong>${shortTime(cluster.live_alert_representative?.decision_time_utc)} / ${shortTime(cluster.offline_representative?.decision_time_utc)}</strong>
@@ -739,14 +738,14 @@
         <div class="eml2-tags" style="margin-top:8px">${tags}</div>
       </div>
       <div class="eml2-card">
-        <h3>Model Evidence Contract</h3>
+        <h3>Model Evidence Contract (기존 v2.2)</h3>
         <div class="eml2-kv">
           <span>exact ablation</span><strong>${ev?.model_evidence?.exact_model_ablation_supported ? "yes" : "deferred"}</strong>
           <span>proxy contributors</span><strong>${ev?.model_evidence?.score_context_contributors?.length || 0}</strong>
         </div>
       </div>
       <div class="eml2-card"><h3>Score Context Contributors</h3><div class="eml2-list">${contributors || '<div class="eml2-muted">없음</div>'}</div></div>
-      <div class="eml2-card"><h3>Realtime Alert Markers</h3><div class="eml2-list">${liveRows || '<div class="eml2-muted">현재 선택 심볼 알람 없음</div>'}</div></div>
+      <div class="eml2-card"><h3>Tier Realtime Alert Markers</h3><div class="eml2-list">${liveRows || '<div class="eml2-muted">현재 선택 심볼 알람 없음</div>'}</div></div>
       ${neighborHtml(nb?.model_neighbors, "Model-Matched Cases")}
       ${neighborHtml(nb?.chart_neighbors, "Chart-Similar Cases")}
       ${neighborHtml(nb?.failure_twins, "Failure Twins")}
