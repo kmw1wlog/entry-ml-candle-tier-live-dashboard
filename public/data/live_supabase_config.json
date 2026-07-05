@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "supabase_url": "https://gedwxtncjxrtxyxrzigi.supabase.co",
+  "supabase_publishable_key": "sb_publishable_lujWzqfNrpuFI_5O7cw56w_zjaW8fH4",
+  "table": "alert_markers"
+}
