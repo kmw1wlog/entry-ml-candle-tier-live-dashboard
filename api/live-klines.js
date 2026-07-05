@@ -10,6 +10,15 @@ module.exports = async function handler(req, res) {
     res.status(400).json({ error: "invalid interval" });
     return;
   }
+  const sendBars = (source, bars) => {
+    res.setHeader("cache-control", "s-maxage=10, stale-while-revalidate=20");
+    res.json({
+      symbol,
+      interval,
+      source,
+      bars: bars.filter((row) => Number.isFinite(row.time) && Number.isFinite(row.close)).sort((a, b) => a.time - b.time),
+    });
+  };
 
   const params = new URLSearchParams({ symbol, interval, limit: String(limit) });
   const binance = await fetch(`https://api.binance.com/api/v3/klines?${params}`, {
@@ -17,20 +26,17 @@ module.exports = async function handler(req, res) {
   });
   if (binance.ok) {
     const rows = await binance.json();
-    res.setHeader("cache-control", "s-maxage=10, stale-while-revalidate=20");
-    res.json({
-      symbol,
-      interval,
-      source: "binance",
-      bars: rows.map((row) => ({
+    sendBars(
+      "binance",
+      rows.map((row) => ({
         time: Math.floor(Number(row[0]) / 1000),
         open: Number(row[1]),
         high: Number(row[2]),
         low: Number(row[3]),
         close: Number(row[4]),
         quoteVolume: Number(row[7]),
-      })).filter((row) => Number.isFinite(row.time) && Number.isFinite(row.close)),
-    });
+      })),
+    );
     return;
   }
 
@@ -40,23 +46,44 @@ module.exports = async function handler(req, res) {
     headers: { "user-agent": "entry-ml-candle-tier-live-dashboard" },
   });
   if (!bybit.ok) {
-    res.status(bybit.status).json({ error: `binance ${binance.status}; bybit ${bybit.status}` });
+    const base = symbol.replace(/USDT$/, "");
+    const granularity = { "1m": "ONE_MINUTE", "5m": "FIVE_MINUTE", "15m": "FIFTEEN_MINUTE", "1h": "ONE_HOUR" }[interval];
+    for (const product of [`${base}-USDT`, `${base}-USD`]) {
+      const coinbaseParams = new URLSearchParams({ granularity, limit: String(Math.min(limit, 300)) });
+      const coinbase = await fetch(`https://api.coinbase.com/api/v3/brokerage/market/products/${product}/candles?${coinbaseParams}`, {
+        headers: { "user-agent": "entry-ml-candle-tier-live-dashboard" },
+      });
+      if (!coinbase.ok) continue;
+      const payload = await coinbase.json();
+      const candles = payload?.candles || [];
+      if (!candles.length) continue;
+      sendBars(
+        `coinbase:${product}`,
+        candles.map((row) => ({
+          time: Number(row.start),
+          open: Number(row.open),
+          high: Number(row.high),
+          low: Number(row.low),
+          close: Number(row.close),
+          quoteVolume: Number(row.volume) * Number(row.close),
+        })),
+      );
+      return;
+    }
+    res.status(bybit.status).json({ error: `binance ${binance.status}; bybit ${bybit.status}; coinbase unavailable` });
     return;
   }
   const payload = await bybit.json();
   const rows = payload?.result?.list || [];
-  res.setHeader("cache-control", "s-maxage=10, stale-while-revalidate=20");
-  res.json({
-    symbol,
-    interval,
-    source: "bybit",
-    bars: rows.map((row) => ({
+  sendBars(
+    "bybit",
+    rows.map((row) => ({
       time: Math.floor(Number(row[0]) / 1000),
       open: Number(row[1]),
       high: Number(row[2]),
       low: Number(row[3]),
       close: Number(row[4]),
       quoteVolume: Number(row[6]),
-    })).filter((row) => Number.isFinite(row.time) && Number.isFinite(row.close)).sort((a, b) => a.time - b.time),
-  });
+    })),
+  );
 };
